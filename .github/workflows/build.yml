@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         uses: py-actions/py-dependency-install@v4
         with:
-          dependencies: cython wheel
+          path: requirements/cython.txt
       - name: Cythonize
         run: |
           make cythonize
