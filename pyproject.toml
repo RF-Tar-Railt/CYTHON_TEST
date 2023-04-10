@@ -1,0 +1,17 @@
+[tool.pdm]
+
+[project]
+name = "example"
+version = "0.1.0"
+description = "cython test"
+authors = [
+    {name = "RF-Tar-Railt", email = "3165388245@qq.com"},
+]
+dependencies = []
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"

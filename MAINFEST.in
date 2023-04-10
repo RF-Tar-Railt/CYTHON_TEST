@@ -1,0 +1,7 @@
+graft src/example
+include src/example/*.c
+global-exclude *.pyc
+global-exclude *.cache
+exclude src/example/*.html
+exclude src/example/*.so
+exclude src/example/*.pyd
