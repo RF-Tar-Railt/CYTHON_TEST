@@ -40,10 +40,17 @@ jobs:
         with:
           path: requirements/cython.txt
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.3
-        env:
-          CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+        run: |
+          python setup.py bdist_wheel
       - uses: actions/upload-artifact@v3
         with:
           name: wheels
-          path: ./wheelhouse/*.whl
+          path: dist/*.whl
+#      - name: Build wheels
+#        uses: pypa/cibuildwheel@v2.11.3
+#        env:
+#          CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: wheels
+#          path: ./wheelhouse/*.whl
