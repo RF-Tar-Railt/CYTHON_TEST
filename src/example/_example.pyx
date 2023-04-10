@@ -11,10 +11,10 @@ def split(text, separates=None, crlf=True):
     """
     # separates = separates or (" ",)
     # result, quotation, escape = "", "", False
+    escape = False
     cdef str result = ""
-    cdef tuple separates = separates or (" ",)
-    cdef Py_UCS4 quotation = ""
-    cdef bool escape = False
+    cdef tuple _separates = separates or (" ",)
+    cdef Py_UCS4 quotation = ''
     cdef Py_UCS4 ch
     cdef Py_ssize_t i = 0
     cdef Py_ssize_t length = len(text)
@@ -22,7 +22,7 @@ def split(text, separates=None, crlf=True):
     while i < length:
         ch = text[i]
         i += 1
-        if ch == "\\":
+        if ch == '\\':
             escape = True
             result += ch
         elif ch in "\'\"":
@@ -31,10 +31,10 @@ def split(text, separates=None, crlf=True):
                 if escape:
                     result = result[:-1] + ch
             elif ch == quotation:
-                quotation = ""
+                quotation = ''
                 if escape:
                     result = result[:-1] + ch
-        elif (not quotation and ch in separates) or (crlf and ch in {"\n", "\r"}):
+        elif (not quotation and ch in _separates) or (crlf and ch in {"\n", "\r"}):
             if result and result[-1] != "\0":
                 result += "\0"
         else:
