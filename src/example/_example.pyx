@@ -36,12 +36,12 @@ def split(text, separates=None, crlf=True):
             escape = 1
             result.append(ch)
         elif contains(ch, ('"', "'")):
-            if not quotation:
+            if quotation == 0:
                 quotation = ch
                 if escape:
                     result[-1] = ch
             elif ch == quotation:
-                quotation = ""
+                quotation = 0
                 if escape:
                     result[-1] = ch
         elif (not quotation and ch in _separates) or (crlf and contains(ch, ('\r', '\n'))):
