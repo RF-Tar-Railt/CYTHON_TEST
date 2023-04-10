@@ -72,7 +72,7 @@ def split_once(text, separates, crlf=True):
                 if escape:
                     out_text[-1] = ch
             elif ch == quotation:
-                quotation = ""
+                quotation = 0
                 if escape:
                     out_text[-1] = ch
         elif (ch in separates or (crlf and contains(ch, ('\n', '\r')))) and quotation == 0:
