@@ -33,7 +33,7 @@ cmdclass = {
     "build_ext": build_ext,
 }
 
-cflags = ["-Wall", "-Wextra", "-Wpointer-arith"]
+cflags = ["-Wall"]
 
 ext = [
     Extension(
