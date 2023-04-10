@@ -1,3 +1,13 @@
+cdef inline int contains(Py_UCS4 ch, tuple chs):
+    cdef Py_ssize_t i = 0
+    cdef Py_ssize_t length = len(chs)
+    while i < length:
+        if ch == chs[i]:
+            return 1
+        i += 1
+    return 0
+
+
 def split(text, separates=None, crlf=True):
     """尊重引号与转义的字符串切分
 
@@ -11,33 +21,33 @@ def split(text, separates=None, crlf=True):
     """
     # separates = separates or (" ",)
     # result, quotation, escape = "", "", False
-    escape = False
-    cdef str result = ""
+    cdef char escape = 0
+    cdef list result = []
     cdef tuple _separates = separates or (" ",)
-    cdef Py_UCS4 quotation = ''
-    cdef Py_UCS4 ch
+    cdef Py_UCS4 quotation = 0
+    cdef Py_UCS4 ch = 0
     cdef Py_ssize_t i = 0
     cdef Py_ssize_t length = len(text)
 
     while i < length:
         ch = text[i]
         i += 1
-        if ch == '\\':
-            escape = True
-            result += ch
-        elif ch in "\'\"":
+        if contains(ch, ('\\',)):
+            escape = 1
+            result.append(ch)
+        elif contains(ch, ('"', "'")):
             if not quotation:
                 quotation = ch
                 if escape:
-                    result = result[:-1] + ch
+                    result[-1] = ch
             elif ch == quotation:
-                quotation = ''
+                quotation = ""
                 if escape:
-                    result = result[:-1] + ch
-        elif (not quotation and ch in _separates) or (crlf and ch in {"\n", "\r"}):
-            if result and result[-1] != "\0":
-                result += "\0"
+                    result[-1] = ch
+        elif (not quotation and ch in _separates) or (crlf and contains(ch, ('\r', '\n'))):
+            if result and result[-1] != '\0':
+                result.append('\0')
         else:
-            result += ch
-            escape = False
-    return result.split('\0') if result else []
+            result.append(ch)
+            escape = 0
+    return ''.join(result).split('\0') if result else []
