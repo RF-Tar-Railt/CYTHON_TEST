@@ -51,12 +51,6 @@ jobs:
         uses: docker/setup-qemu-action@v2
         with:
           platforms: all
-      - name: Prepare emulation
-        run: |
-          if [[ -n "${{ matrix.qemu }}" ]]; then
-            echo "CIBW_ARCHS_LINUX=${{ matrix.qemu }}" >> $GITHUB_ENV
-          fi
-        shell: bash
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
