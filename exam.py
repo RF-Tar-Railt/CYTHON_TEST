@@ -1,12 +1,24 @@
 from example import split, split_once
 import time
 
-print(split("abc def ghi jk l m n o p q r s t u v w x y z"))
+print(split("abc def ghi jk l m n o p q r s t u v w x y z", (" ",)))
+text1 = "rrr b bbbb"
+text2 = "\'rrr b\' bbbb"
+text3 = "\\\'rrr b\\\' bbbb"
+assert split(text1, (" ",)) == ["rrr", "b", "bbbb"]
+assert split(text2, (" ",)) == ["rrr b", "bbbb"]
+assert split(text3, (" ",)) == ["'rrr b'", "bbbb"]
+assert split("", (" ",)) == []
+assert split("  ", (" ",)) == []
 
+print(split_once("abc def ghi jk l m n o p q r s t u v w x y z", (" ",)))
+print(split_once(text1, (" ",)))
+print(split_once(text2, (" ",)))
+print(split_once(text3, (" ",)))
 QUOTATION = {"'", '"', "’", "“"}
 
 
-def split_once1(text: str, separates: str, crlf: bool = True):
+def split_once1(text: str, separates: tuple, crlf: bool = True):
     """单次分隔字符串"""
     index, out_text, quotation, escape = 0, "", "", False
     separates = tuple(separates)
@@ -70,11 +82,11 @@ def split1(text: str, separates = None, crlf: bool = True):
 
 st = time.perf_counter()
 for i in range(10000):
-    split_once1("a b c d e f g h i j k l m n o p q r s t u v w x y z", " ")
+    split_once1("a b c d e f g h i j k l m n o p q r s t u v w x y z", (" ",))
 print(time.perf_counter() - st)
 
 
 st = time.perf_counter()
 for i in range(10000):
-    split_once("a b c d e f g h i j k l m n o p q r s t u v w x y z", " ")
+    split_once("a b c d e f g h i j k l m n o p q r s t u v w x y z", (" ",))
 print(time.perf_counter() - st)
