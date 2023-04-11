@@ -35,7 +35,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu, windows, macos]
-        python-version: [3.8, 3.9, 3.10.4, 3.11]
         qemu: ['']
         include:
           - os: ubuntu
@@ -51,11 +50,18 @@ jobs:
         uses: docker/setup-qemu-action@v2
         with:
           platforms: all
-      - name: Set up Python ${{ matrix.python-version }}
+        id: qemu
+      - name: Prepare emulation
+        run: |
+          if [[ -n "${{ matrix.qemu }}" ]]; then
+            # Build emulated architectures only if QEMU is set,
+            # use default "auto" otherwise
+            echo "CIBW_ARCHS_LINUX=${{ matrix.qemu }}" >> $GITHUB_ENV
+          fi
+        shell: bash
+      - name: Set up Python
         uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install cython
         uses: py-actions/py-dependency-install@v4
         with:
           path: requirements/cython.txt
@@ -66,7 +72,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.3
         env:
           CIBW_ARCHS_MACOS: x86_64 arm64 universal2
-          CIBW_ARCHS_LINUX: auto aarch64 ppc64le s390x
+          CIBW_ARCHS_LINUX: auto
           CIBW_ARCHS_WINDOWS: auto x86
       - uses: actions/upload-artifact@v3
         with:
