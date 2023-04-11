@@ -1,3 +1,9 @@
+# cython: boundscheck=False
+# cython: wraparound=False
+# cython: cdivision=True
+# cython: initializedcheck=False
+
+
 cdef inline int contains(Py_UCS4 ch, tuple chs):
     cdef Py_ssize_t i = 0
     cdef Py_ssize_t length = len(chs)
@@ -8,7 +14,7 @@ cdef inline int contains(Py_UCS4 ch, tuple chs):
     return 0
 
 
-def split(text, separates=None, crlf=True):
+def split(str text, tuple separates, bool crlf=True):
     """尊重引号与转义的字符串切分
 
     Args:
@@ -21,7 +27,6 @@ def split(text, separates=None, crlf=True):
     """
     cdef char escape = 0
     cdef list result = []
-    cdef tuple _separates = separates or (" ",)
     cdef Py_UCS4 quotation = 0
     cdef Py_UCS4 ch = 0
     cdef Py_ssize_t i = 0
@@ -30,7 +35,7 @@ def split(text, separates=None, crlf=True):
     while i < length:
         ch = text[i]
         i += 1
-        if contains(ch, ('\\',)):
+        if ch == 92:  # \\
             escape = 1
             result.append(ch)
         elif contains(ch, ('"', "'")):
@@ -42,7 +47,7 @@ def split(text, separates=None, crlf=True):
                 quotation = 0
                 if escape:
                     result[-1] = ch
-        elif (quotation == 0 and ch in _separates) or (crlf and contains(ch, ('\r', '\n'))):
+        elif (quotation == 0 and ch in separates) or (crlf and contains(ch, ('\r', '\n'))):
             if result and result[-1] != '\0':
                 result.append('\0')
         else:
@@ -51,7 +56,7 @@ def split(text, separates=None, crlf=True):
     return ''.join(result).split('\0') if result else []
 
 
-def split_once(text, separates, crlf=True):
+def split_once(str text, tuple separates, bool crlf=True):
     text = text.lstrip()
     cdef Py_ssize_t index = 0
     cdef list out_text = []
@@ -63,7 +68,7 @@ def split_once(text, separates, crlf=True):
     while index < length:
         ch = text[index]
         index += 1
-        if contains(ch, ('\\',)):
+        if ch == 92:  # \\
             escape = 1
             out_text.append(ch)
         elif contains(ch, ('"', "'")):  # 遇到引号括起来的部分跳过分隔

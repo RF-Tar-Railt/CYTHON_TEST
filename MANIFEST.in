@@ -1,4 +1,3 @@
 graft src/example
-include src/example/*.pyi
 global-exclude *.pyc
 global-exclude *.cache
