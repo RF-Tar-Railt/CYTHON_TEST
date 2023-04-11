@@ -3,7 +3,6 @@
 # cython: cdivision=True
 # cython: initializedcheck=False
 
-
 cdef inline int contains(Py_UCS4 ch, tuple chs):
     cdef Py_ssize_t i = 0
     cdef Py_ssize_t length = len(chs)
@@ -14,7 +13,7 @@ cdef inline int contains(Py_UCS4 ch, tuple chs):
     return 0
 
 
-def split(str text, tuple separates, bool crlf=True):
+def split(str text, tuple separates, char crlf=True):
     """尊重引号与转义的字符串切分
 
     Args:
@@ -56,7 +55,7 @@ def split(str text, tuple separates, bool crlf=True):
     return ''.join(result).split('\0') if result else []
 
 
-def split_once(str text, tuple separates, bool crlf=True):
+def split_once(str text, tuple separates, char crlf=True):
     text = text.lstrip()
     cdef Py_ssize_t index = 0
     cdef list out_text = []
